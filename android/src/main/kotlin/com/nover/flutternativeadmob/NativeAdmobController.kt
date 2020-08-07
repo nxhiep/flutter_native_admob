@@ -19,7 +19,7 @@ class NativeAdmobController(
 ) : MethodChannel.MethodCallHandler {
 
   enum class CallMethod {
-    setAdUnitID, reloadAd, setNonPersonalizedAds, destroy
+    setAdUnitID, reloadAd, setNonPersonalizedAds
   }
 
   enum class LoadState {
@@ -79,10 +79,6 @@ class NativeAdmobController(
         call.argument<Boolean>("forceRefresh")?.let {
           if (it || nativeAd == null) loadAd(numberAds) else invokeLoadCompleted()
         }
-      }
-
-      CallMethod.destroy -> {
-        if (nativeAd != null) nativeAd.destroy()
       }
 
       CallMethod.setNonPersonalizedAds -> {

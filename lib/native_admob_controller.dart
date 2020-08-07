@@ -85,11 +85,6 @@ class NativeAdmobController {
     });
   }
 
-  void destroy() {
-    _channel.invokeMethod("destroy");
-  }
-
-
   void setTestDeviceIds(List<String> ids){
     if (ids == null || ids.isEmpty) return;
 
