@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-enum AdLoadState { loading, loadError, loadCompleted }
+enum AdLoadState { loading, loadError, loadCompleted, onAdOpened, onAdClicked }
 
 class NativeAdmobController {
   final _key = UniqueKey();
@@ -45,6 +45,14 @@ class NativeAdmobController {
 
       case "loadCompleted":
         _stateChanged.add(AdLoadState.loadCompleted);
+        break;
+
+      case "onAdOpened":
+        _stateChanged.add(AdLoadState.onAdOpened);
+        break;
+
+      case "onAdClicked":
+        _stateChanged.add(AdLoadState.onAdClicked);
         break;
     }
   }

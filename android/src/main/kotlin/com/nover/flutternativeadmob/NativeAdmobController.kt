@@ -23,7 +23,7 @@ class NativeAdmobController(
   }
 
   enum class LoadState {
-    loading, loadError, loadCompleted
+    loading, loadError, loadCompleted, onAdOpened, onAdClicked
   }
 
   var nativeAdChanged: ((UnifiedNativeAd?) -> Unit)? = null
@@ -57,6 +57,14 @@ class NativeAdmobController(
                 println("onAdFailedToLoad errorCode = $errorCode")
                 channel.invokeMethod(LoadState.loadError.toString(), null)
               }
+              override fun onAdOpened() {
+                println("onAdOpened)
+                channel.invokeMethod(LoadState.onAdOpened.toString(), null)
+              }
+              override fun onAdClicked() {
+                println("onAdClicked")
+                channel.invokeMethod(LoadState.onAdClicked.toString(), null)
+              }
             }).build()
           }
           var numberAds: Int? = 1
@@ -65,13 +73,16 @@ class NativeAdmobController(
         } ?: result.success(null)
       }
 
-
       CallMethod.reloadAd -> {
         var numberAds: Int? = 1
         call.argument<Int>("numberAds")?.let { numberAds = it }
         call.argument<Boolean>("forceRefresh")?.let {
           if (it || nativeAd == null) loadAd(numberAds) else invokeLoadCompleted()
         }
+      }
+
+      CallMethod.destroy -> {
+        if (nativeAd != null) nativeAd.destroy()
       }
 
       CallMethod.setNonPersonalizedAds -> {
