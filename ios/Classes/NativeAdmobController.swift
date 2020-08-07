@@ -105,7 +105,7 @@ class NativeAdmobController: NSObject {
     }
 }
 
-extension NativeAdmobController: GADUnifiedNativeAdLoaderDelegate, GADUnifiedNativeAdDelegate {
+extension NativeAdmobController: GADUnifiedNativeAdLoaderDelegate {
     
     func adLoader(_ adLoader: GADAdLoader, didFailToReceiveAdWithError error: GADRequestError) {
         print("NativeAdmob: failed to load with error: \(error.localizedDescription)")
@@ -115,9 +115,12 @@ extension NativeAdmobController: GADUnifiedNativeAdLoaderDelegate, GADUnifiedNat
     func adLoader(_ adLoader: GADAdLoader, didReceive nativeAd: GADUnifiedNativeAd) {
         self.nativeAd = nativeAd
     }
+}
 
+extension NativeAdmobController: GADUnifiedNativeAdDelegate {
     func nativeAdDidRecordImpression(_ nativeAd: GADUnifiedNativeAd) {
         print("nativeAdDidRecordImpression 22222222")
+        channel.invokeMethod(LoadState.onAdOpened.rawValue, arguments: nil)
     }
     func nativeAdDidRecordClick(_ nativeAd: GADUnifiedNativeAd) {
         print("nativeAdDidRecordClick 22222222")
