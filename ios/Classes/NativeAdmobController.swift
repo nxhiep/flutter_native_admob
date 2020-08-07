@@ -16,7 +16,7 @@ class NativeAdmobController: NSObject {
     }
     
     enum LoadState: String {
-        case loading, loadError, loadCompleted
+        case loading, loadError, loadCompleted, onAdOpened, onAdClicked
     }
     
     let id: String
@@ -114,6 +114,12 @@ extension NativeAdmobController: GADUnifiedNativeAdLoaderDelegate {
     
     func adLoader(_ adLoader: GADAdLoader, didReceive nativeAd: GADUnifiedNativeAd) {
         self.nativeAd = nativeAd
+    }
+}
+
+extension NativeAdmobController: GADUnifiedNativeAdDelegate {
+    func nativeAdDidRecordClick(_ nativeAd: GADUnifiedNativeAd) {
+        channel.invokeMethod(LoadState.onAdClicked.rawValue, arguments: nil)
     }
 }
 
