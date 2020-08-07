@@ -116,14 +116,14 @@ extension NativeAdmobController: GADUnifiedNativeAdLoaderDelegate {
         self.nativeAd = nativeAd
     }
 
-    func nativeAdDidRecordImpression(_ nativeAd: GADUnifiedNativeAd) {
-        print("nativeAdDidRecordImpression 1111111")
-    }
+    // func nativeAdDidRecordImpression(_ nativeAd: GADUnifiedNativeAd) {
+    //     print("nativeAdDidRecordImpression 1111111")
+    // }
 
-    func nativeAdDidRecordClick(_ nativeAd: GADUnifiedNativeAd) {
-        print("nativeAdDidRecordClick 111111")
-        channel.invokeMethod(LoadState.onAdClicked.rawValue, arguments: nil)
-    }
+    // func nativeAdDidRecordClick(_ nativeAd: GADUnifiedNativeAd) {
+    //     print("nativeAdDidRecordClick 111111")
+    //     channel.invokeMethod(LoadState.onAdClicked.rawValue, arguments: nil)
+    // }
 }
 
 extension NativeAdmobController: GADUnifiedNativeAdDelegate {
