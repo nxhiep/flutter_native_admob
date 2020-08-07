@@ -58,7 +58,7 @@ class NativeAdmobController(
                 channel.invokeMethod(LoadState.loadError.toString(), null)
               }
               override fun onAdOpened() {
-                println("onAdOpened)
+                println("onAdOpened")
                 channel.invokeMethod(LoadState.onAdOpened.toString(), null)
               }
               override fun onAdClicked() {
