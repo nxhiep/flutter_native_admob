@@ -19,7 +19,7 @@ class NativeAdmobController(
 ) : MethodChannel.MethodCallHandler {
 
   enum class CallMethod {
-    setAdUnitID, reloadAd, setNonPersonalizedAds
+    setAdUnitID, reloadAd, setNonPersonalizedAds, destroy
   }
 
   enum class LoadState {
