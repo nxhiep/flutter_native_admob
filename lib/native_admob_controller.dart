@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,6 +35,7 @@ class NativeAdmobController {
   }
 
   Future<Null> _handleMessages(MethodCall call) async {
+    print("_handleMessages MethodCall = $call");
     switch (call.method) {
       case "loading":
         _stateChanged.add(AdLoadState.loading);
@@ -78,11 +80,14 @@ class NativeAdmobController {
   ///  * [forceRefresh], force reload a new ad or using cache ad
   void reloadAd({bool forceRefresh = false, int numberAds = 1}) {
     if (_adUnitID == null) return;
-
-    _channel.invokeMethod("reloadAd", {
-      "forceRefresh": forceRefresh,
-      "numberAds": numberAds
-    });
+    if(Platform.isIOS && forceRefresh){
+      setAdUnitID(_adUnitID, numberAds: numberAds);
+    } else {
+      _channel.invokeMethod("reloadAd", {
+        "forceRefresh": forceRefresh,
+        "numberAds": numberAds
+      });
+    }
   }
 
   void setTestDeviceIds(List<String> ids){

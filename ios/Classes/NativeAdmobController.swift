@@ -29,6 +29,7 @@ class NativeAdmobController: NSObject {
     
     private var adLoader: GADAdLoader?
     private var adUnitID: String?
+    private var numberAds: Int = 1
     private var nonPersonalizedAds: Bool = false
     
     init(id: String, channel: FlutterMethodChannel) {
@@ -48,14 +49,13 @@ class NativeAdmobController: NSObject {
             guard let adUnitID = params?["adUnitID"] as? String else {
                 return result(nil)
             }
-            let isChanged = adUnitID != self.adUnitID
+            let numberOfAds: Int = params?["numberAds"] as? Int ?? 1
+            let isChanged = adUnitID != self.adUnitID || numberOfAds != self.numberAds
             self.adUnitID = adUnitID
+            self.numberAds = numberOfAds
             if adLoader == nil || isChanged {
-                let numberAds: Int = params?["numberAds"] as? Int ?? 1
                 let multipleAdsOptions = GADMultipleAdsAdLoaderOptions()
-                if numberAds != nil && numberAds > 1 {
-                    multipleAdsOptions.numberOfAds = numberAds
-                }
+                multipleAdsOptions.numberOfAds = numberOfAds
                 adLoader = GADAdLoader(
                     adUnitID: adUnitID, 
                     rootViewController: nil, 
@@ -113,18 +113,49 @@ extension NativeAdmobController: GADUnifiedNativeAdLoaderDelegate {
     }
     
     func adLoader(_ adLoader: GADAdLoader, didReceive nativeAd: GADUnifiedNativeAd) {
+        // print("adLoader")
         self.nativeAd = nativeAd
+    }
+
+    func adLoaderDidFinishLoading(_ adLoader: GADAdLoader) {
+        // The adLoader has finished loading ads, and a new request can be sent.
+        // print("adLoaderDidFinishLoading")
+        channel.invokeMethod(LoadState.onAdOpened.rawValue, arguments: nil)
     }
 }
 
 extension NativeAdmobController: GADUnifiedNativeAdDelegate {
     func nativeAdDidRecordImpression(_ nativeAd: GADUnifiedNativeAd) {
-        print("nativeAdDidRecordImpression 22222222")
+        // The native ad was shown.
+        // print("nativeAdDidRecordImpression")
         channel.invokeMethod(LoadState.onAdOpened.rawValue, arguments: nil)
     }
+
     func nativeAdDidRecordClick(_ nativeAd: GADUnifiedNativeAd) {
-        print("nativeAdDidRecordClick 22222222")
+        // The native ad was clicked on.
+        // print("nativeAdDidRecordClick")
         channel.invokeMethod(LoadState.onAdClicked.rawValue, arguments: nil)
+    }
+
+    func nativeAdWillPresentScreen(_ nativeAd: GADUnifiedNativeAd) {
+        // The native ad will present a full screen view.
+        // print("nativeAdWillPresentScreen")
+    }
+
+    func nativeAdWillDismissScreen(_ nativeAd: GADUnifiedNativeAd) {
+        // The native ad will dismiss a full screen view.
+        // print("nativeAdWillDismissScreen")
+    }
+
+    func nativeAdDidDismissScreen(_ nativeAd: GADUnifiedNativeAd) {
+        // The native ad did dismiss a full screen view.
+        // print("nativeAdDidDismissScreen")
+    }
+
+    func nativeAdWillLeaveApplication(_ nativeAd: GADUnifiedNativeAd) {
+        // The native ad will cause the application to become inactive and
+        // open a new application.
+        // print("nativeAdWillLeaveApplication")
     }
 }
 
