@@ -80,7 +80,7 @@ class NativeAdmobController {
   ///  * [forceRefresh], force reload a new ad or using cache ad
   void reloadAd({bool forceRefresh = false, int numberAds = 1}) {
     if (_adUnitID == null) return;
-    if(Platform.isIOS && forceRefresh){
+    if(Platform.isIOS && forceRefresh && numberAds > 1){
       setAdUnitID(_adUnitID, numberAds: numberAds);
     } else {
       _channel.invokeMethod("reloadAd", {
